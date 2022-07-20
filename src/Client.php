@@ -16,12 +16,19 @@ class Client
     public $privateKeyFile;
     public $privateKeyPwd;
     public $domain;
-    public $signType ;
+    public $signType;
+    public $productId;
+    public $mid;
+    public $channelType;
+
     protected $sign;
     protected $client;
 
-    public function __construct($publicKeyFile,$privateKeyFile,$privateKeyPwd,$domain,$signType='01')
+    public function __construct($mid,$productId,$channelType,$publicKeyFile,$privateKeyFile,$privateKeyPwd,$domain,$signType='01')
     {
+        $this->mid = $mid;
+        $this->productId = $productId;
+        $this->channelType = $channelType;
         $this->domain = $domain;
         $this->publicKeyFile  = $publicKeyFile;
         $this->privateKeyPwd = $privateKeyPwd;
@@ -31,6 +38,19 @@ class Client
 
     public function post($uri, $data)
     {
+        $head= array(
+            'version'     => '1.0',
+            'method'      => $data['method'],
+            'productId'   => $this->productId,
+            'accessType'  => '1',
+            'mid'         => $this->mid,
+            'channelType' => $this->channelType,
+            'reqTime'     => date('YmdHis', time()),
+        );
+        unset($data['method']);
+
+        $data = ['head'=>$head, 'body'=>$data];
+
         $postData = array(
             'charset'  => 'utf-8',
             'signType' => $this->signType,
