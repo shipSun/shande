@@ -8,7 +8,6 @@
 
 namespace ShanDe;
 
-
 use ShanDe\encrypt\RSA;
 
 class Client
