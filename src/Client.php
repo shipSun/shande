@@ -61,7 +61,7 @@ class Client
         $data = $this->getClient()->post($uri, ['body'=>http_build_query($postData)]);
         return $this->parseResult($data->getBody()->getContents());
     }
-    protected function parseResult($result)
+    public function parseResult($result)
     {
         $arr      = array();
         $response = urldecode($result);
