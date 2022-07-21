@@ -39,17 +39,17 @@ class Client
     public function post($uri, $data)
     {
         $postData = $this->postData($data);
-        $data = $this->getClient()->post($uri, ['body'=>http_build_query($postData)]);
+        $data = $this->getClient()->post($uri, ['body'=>$postData]);
         return $this->parseResult($data->getBody()->getContents());
     }
     protected function data($data){
         $data = json_encode($data);
-        return array(
+        return http_build_query(array(
             'charset'  => 'utf-8',
             'signType' => $this->signType,
             'data'     => $data,
             'sign' =>$this->sign($data)
-        );
+        ));
     }
     public function postData($data){
         $head= array(
