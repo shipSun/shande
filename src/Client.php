@@ -35,7 +35,6 @@ class Client
         $this->privateKeyFile = $privateKeyFile;
         $this->signType = $signType;
     }
-
     public function post($uri, $data)
     {
         $postData = $this->postData($data);
