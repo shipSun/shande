@@ -110,7 +110,7 @@ class Client
         }
         return $this->sign;
     }
-    public function sign($data){
+    protected function sign($data){
         return $this->getRsa()->sign($data);
     }
     public function verify($data,$sign)
