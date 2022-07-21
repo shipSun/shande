@@ -93,6 +93,7 @@ class Client
             $config['verify'] = false;
             $config['headers'] = [
                 'Content-Type'=>'application/x-www-form-urlencoded',
+                'Accept'=>'application/x-www-form-urlencoded',
             ];
             $config['debug'] = false;
             $config['version'] = CURL_HTTP_VERSION_1_1;
