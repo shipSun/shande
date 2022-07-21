@@ -38,6 +38,12 @@ class Client
 
     public function post($uri, $data)
     {
+        $postData = $this->postData($data);
+        $postData['sign']= $this->sign($postData['data']);
+        $data = $this->getClient()->post($uri, ['body'=>http_build_query($postData)]);
+        return $this->parseResult($data->getBody()->getContents());
+    }
+    public function postData($data){
         $head= array(
             'version'     => '1.0',
             'method'      => $data['method'],
@@ -51,15 +57,11 @@ class Client
 
         $data = ['head'=>$head, 'body'=>$data];
 
-        $postData = array(
+        return array(
             'charset'  => 'utf-8',
             'signType' => $this->signType,
             'data'     => json_encode($data)
         );
-        $postData['sign']= $this->sign($postData['data']);
-        $this->getClient();
-        $data = $this->getClient()->post($uri, ['body'=>http_build_query($postData)]);
-        return $this->parseResult($data->getBody()->getContents());
     }
     public function parseResult($result)
     {
