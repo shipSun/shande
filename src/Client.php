@@ -42,6 +42,15 @@ class Client
         $data = $this->getClient()->post($uri, ['body'=>http_build_query($postData)]);
         return $this->parseResult($data->getBody()->getContents());
     }
+    protected function data($data){
+        $data = json_encode($data);
+        return array(
+            'charset'  => 'utf-8',
+            'signType' => $this->signType,
+            'data'     => $data,
+            'sign' =>$this->sign($data)
+        );
+    }
     public function postData($data){
         $head= array(
             'version'     => '1.0',
@@ -54,14 +63,16 @@ class Client
         );
         unset($data['method']);
 
-        $data = json_encode(['head'=>$head, 'body'=>$data]);
-
-        return array(
-            'charset'  => 'utf-8',
-            'signType' => $this->signType,
-            'data'     => $data,
-            'sign' =>$this->sign($data)
+        return $this->data(['head'=>$head, 'body'=>$data]);
+    }
+    public function notifyData($code, $msg){
+        $head= array(
+            'version'     => '1.0',
+            'respTime'      => date('YmdHis', time()),
+            'respCode'      => $code,
+            'respMsg'   => $msg,
         );
+        return $this->data(['head'=>$head, 'body'=>'']);
     }
     public function parseResult($result)
     {
@@ -75,11 +86,6 @@ class Client
             $arr[$key] = $value;
         }
         return $arr;
-    }
-
-    public function data($data)
-    {
-        return json_decode($data['data'],true);
     }
     protected function getClient(){
         if(!$this->client){
